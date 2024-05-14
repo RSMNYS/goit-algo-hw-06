@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from networkx.algorithms import traversal
 import random 
 
+from graph_algorithms import dfs_edges, bfs_edges, all_pairs_dijkstra
+
 ## Завдання 1
 
 # Створення графа
@@ -31,13 +33,23 @@ print("Ступені вершин:", list(G.degree()))
 
 ## Завдання 2
 
+# DFS шлях власна реалізація
+dfs_path = list(dfs_edges(G, "Станція 1"))
+
+print("DFS шлях власна реалізація:", dfs_path)
+
 # DFS шлях
 dfs_path = list(traversal.dfs_edges(G, source="Станція 1"))
-print("DFS шлях:", dfs_path)
+print("DFS шлях", dfs_path)
+
+# BFS шлях власна реалізація
+bfs_path = list(bfs_edges(G, "Станція 1"))
+print("BFS шлях власна реалізація:", bfs_path)
 
 # BFS шлях
 bfs_path = list(traversal.bfs_edges(G, source="Станція 1"))
 print("BFS шлях:", bfs_path)
+
 
 
 ## Завдання 3
@@ -46,10 +58,12 @@ print("BFS шлях:", bfs_path)
 for (u, v) in G.edges():
     G[u][v]['weight'] = random.randint(1, 10)
 
-# Знаходження найкоротших шляхів
-path_lengths = dict(nx.all_pairs_dijkstra_path_length(G))
-print("Найкоротші шляхи між всіма парами вершин:")
-for start in path_lengths:
-    for end in path_lengths[start]:
-        print(f"Від {start} до {end} шлях = {path_lengths[start][end]}")
 
+# Обчислюємо найкоротші шляхи між усіма парами вершин
+shortest_paths_all_pairs = all_pairs_dijkstra(G)
+
+# Друк результатів
+for start, paths in shortest_paths_all_pairs.items():
+    print(f"\nНайкоротші шляхи від {start}:")
+    for destination, length in paths.items():
+        print(f"{start} -> {destination}: {length}")
